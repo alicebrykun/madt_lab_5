@@ -4,16 +4,20 @@ import android.os.AsyncTask;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
-public class DataLoader extends AsyncTask<String, Void, String> {
+public abstract class DataLoader extends AsyncTask<String, Void, ArrayList<String>> {
 
-    protected String doInBackground(String... params) {
+    protected ArrayList<String> doInBackground(String... params) {
+
         try {
-            return DataManager.getRateFromECB(params[0]);
+            return DataManager.getRateFromECB();
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
-            return sw.toString();
         }
+        return null;
     }
+
+    public abstract void onPostExecute(ArrayList<String> result);
 }

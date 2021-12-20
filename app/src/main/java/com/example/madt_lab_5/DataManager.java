@@ -4,21 +4,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class DataManager {
 
-    public static String getRateFromECB(String currencyCode) throws IOException {
-        String rate = "Data were not retrieved!";
+    public static ArrayList<String> getRateFromECB() throws IOException {
+        String rate = "Data were not retrieved.";
+        ArrayList<String> arrayList = new ArrayList<>();
+
         InputStream stream = downloadUrl(Const.ECB_URL);
         try {
-            rate = Parser.getRateFromECB(stream, currencyCode);
+            arrayList = Parser.getRateFromECB(stream);
         }
         finally {
             if (stream != null) {
                 stream.close();
             }
         }
-        return rate;
+        return arrayList;
     }
 
     private static InputStream downloadUrl(String urlString) throws IOException {

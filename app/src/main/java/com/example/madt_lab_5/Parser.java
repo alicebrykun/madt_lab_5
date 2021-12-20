@@ -7,29 +7,29 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class Parser {
-    public static String getRateFromECB(InputStream stream, String currencyCode) throws IOException {
+    public static ArrayList<String> getRateFromECB(InputStream stream) throws IOException {
         String result = "";
+        ArrayList<String> arrayList = new ArrayList<>();
         try {
             DocumentBuilderFactory xmlDocFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder xmlDocBuilder = xmlDocFactory.newDocumentBuilder();
             Document doc = xmlDocBuilder.parse(stream);
+
 
             NodeList rateNodes = doc.getElementsByTagName(Const.CUBE_NODE);
             for (int i = 0; i < rateNodes.getLength(); ++i) {
                 Element cube = (Element) rateNodes.item(i);
                 if(cube.hasAttribute("currency")){
                     String currencyName = cube.getAttribute("currency");
-                    if(currencyName.equals(currencyCode))
-                    {
-                        result = cube.getAttribute("rate");
-                        break;
-                    }
+                    String currencyRate = cube.getAttribute("rate");
+                    arrayList.add(currencyName+" - "+currencyRate);
                 }
             }
         } catch (ParserConfigurationException e) {
@@ -37,6 +37,6 @@ public class Parser {
         } catch (SAXException e) {
             e.printStackTrace();
         }
-        return result;
+        return arrayList;
     }
 }
